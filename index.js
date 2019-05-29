@@ -167,7 +167,30 @@ function transforIntoPerson(keys, line){
   return person;
 }
 
+// ===================================================================
+// Function to Intersect classes from people
+// Parameters: first  => First person
+//             second => Second person
+function intersectClasses(first, second){
+  firstClasses = first['classes'];
+  secondClasses = second['classes'];
+  console.log(firstClasses);
+  console.log(secondClasses);
+}
 
+// ===================================================================
+// Function to Intersect addresses from people
+// Parameters: first  => First person
+//             second => Second person
+function intersectAddresses(first, second){
+  firstAddresses = first['addresses'];
+  secondAddresses = second['addresses'];
+  console.log(firstAddresses);
+  console.log(secondAddresses);
+}
+
+
+// ===================================================================
 // Function to Open The CSV line by line
 // https://nodejs.org/api/readline.html#readline_example_read_file_stream_line_by_line
 async function processLineByLine() {
@@ -200,8 +223,8 @@ async function processLineByLine() {
       let other = people[index];
 
       // TODO DUPLICADOS
-      other['classes'] = other['classes'].concat(person['classes']);
-      other['addresses'] = other['addresses'].concat(person['addresses']);
+      other['classes'] = intersectClasses(other, person);
+      other['addresses'] = intersectAddresses(other, person);
     }
 
     if(addPerson){
