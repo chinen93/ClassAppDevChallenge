@@ -4,9 +4,8 @@ console.log("ClassApp Dev Challenge");
 const _ = require('lodash');
 const fs = require('fs');
 const readline = require('readline');
-
-// Get an instance of `PhoneNumberUtil`.
 const phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
+const PNF = require('google-libphonenumber').PhoneNumberFormat;
 
 
 // Code
@@ -67,11 +66,12 @@ function transforIntoPerson(keys, line){
       }
 
       // Some classes may have a dirty character in the middle.
-      // For example: "Sala 1 / Sala 2"
-      if(value.indexOf('/')){
+      // For example: "Sala 1 / Sala 2" or "Sala 1 , Sala 2"
+      if(value.indexOf('/') || value.indexOf(',')){
         let values = _.split(value, '/');
+        values = _.split(values, ',');
         _.forEach(values, function(val){
-          person['classes'].push(_.trimEnd(val));
+          person['classes'].push(_.trim(val));
         });
       }else{
         person['classes'].push(value);
@@ -103,17 +103,27 @@ function transforIntoPerson(keys, line){
           try{
             // Parse number with country code and keep raw input.
             const number = phoneUtil.parseAndKeepRawInput(value, 'BR');
-            address['address'] = value;
+            if(phoneUtil.isValidNumber(number)){
+              address['address'] = number.getCountryCode() + "" + number.getNationalNumber();
+            }else{
+              addAddress = false;
+            }
           }catch(err){
             // Could not parse the number, so do not add it to
             // addresses.
             addAddress = false;
           }
-        }else{
-          // Address is an email, just add it.
-          address['address'] = value;
         }
 
+        // Check if an email is not empty
+        if(_.startsWith(key, 'email')){
+          if(value){
+            address['address'] = value;
+          }else{
+            addAddress = false;
+          }
+        }
+          
         if(addAddress){
           person['addresses'].push(address);
         }
@@ -122,7 +132,6 @@ function transforIntoPerson(keys, line){
       }
     }
   }
-  console.log(JSON.stringify(person));
   return person;
 }
 
@@ -145,11 +154,35 @@ async function processLineByLine() {
     lines.push(processedLine);
   }
 
+  let peopleIndex = {};
+
+  // First line is the key headers.
   let keysLine = lines.shift();
+
+  // The other lines are values for each person.
   _.forEach(lines, function(line){
+    let addPerson = true;
     let person = transforIntoPerson(keysLine, line);
-    people.push(person);
+
+    if(peopleIndex[person['eid']]){
+      addPerson = false;
+
+      let index = peopleIndex[person['eid']] - 1;
+      let other = people[index];
+
+      console.log("Já Existe");
+      other['classes'] = other['classes'].concat(person['classes']);
+      other['addresses'] = other['addresses'].concat(person['addresses']);
+      console.log(other);
+    }
+    
+    if(addPerson){
+      peopleIndex[person['eid']] = people.push(person);
+      console.log(peopleIndex);
+    }
+
   });
   // console.log(lines);
+  console.log(JSON.stringify(people, null, 2));
 }
 processLineByLine();
