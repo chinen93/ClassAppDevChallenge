@@ -17,7 +17,6 @@ let people = [];
 // Function to Get a String and convert it into a array.
 // Parameters: line => String, representing a line from a CSV file.
 function splitLine(line){
-  console.log(line);
 
   // Line is a line from a csv file, so split everything based on comma.
   let middle = _.split(line, ',');
@@ -42,6 +41,19 @@ function splitLine(line){
     }
   }
   return res;
+}
+
+// ===================================================================
+// Function to get real email from a string
+// Parameters: string => String containing the email address
+function getEmail(string){
+  // Get until the end of the actual email.
+  // For example: "email@email.com :)" should be "email@email.com".
+  let indexEnd = string.indexOf(' ');
+  if(indexEnd == -1){
+    indexEnd = string.length;
+  }
+  return string.substring(0, indexEnd);
 }
 
 // ===================================================================
@@ -117,13 +129,33 @@ function transforIntoPerson(keys, line){
 
         // Check if an email is not empty
         if(_.startsWith(key, 'email')){
-          if(value){
-            address['address'] = value;
+          if(value.indexOf('@') > 0){
+
+            // Some classes may have a dirty character in the middle.
+            // For example: "email1 / email2" or "email1 , email2"
+            if(value.indexOf('/') || value.indexOf(',')){
+              let emails = _.split(value, '/');
+              emails = _.split(emails, ',');
+
+              _.forEach(emails, function(email){
+
+                let actualEmail = getEmail(email);
+
+                address['address'] = actualEmail;
+                person['addresses'].push(address);
+              });
+            }else{
+
+              // There is only one element in value.
+              let actualEmail = getEmail(value);
+
+              address['address'] = actualEmail;
+            }
           }else{
             addAddress = false;
           }
         }
-          
+
         if(addAddress){
           person['addresses'].push(address);
         }
@@ -135,9 +167,6 @@ function transforIntoPerson(keys, line){
   return person;
 }
 
-// console.log(JSON.stringify(object));
-
-// Function to Create a File with the Object
 
 // Function to Open The CSV line by line
 // https://nodejs.org/api/readline.html#readline_example_read_file_stream_line_by_line
@@ -170,19 +199,16 @@ async function processLineByLine() {
       let index = peopleIndex[person['eid']] - 1;
       let other = people[index];
 
-      console.log("Já Existe");
+      // TODO DUPLICADOS
       other['classes'] = other['classes'].concat(person['classes']);
       other['addresses'] = other['addresses'].concat(person['addresses']);
-      console.log(other);
     }
-    
+
     if(addPerson){
       peopleIndex[person['eid']] = people.push(person);
-      console.log(peopleIndex);
     }
 
   });
-  // console.log(lines);
   console.log(JSON.stringify(people, null, 2));
 }
 processLineByLine();
