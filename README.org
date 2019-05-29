@@ -1,0 +1,10 @@
+#+TITLE:        ClassApp Dev Challenge Notes
+#+AUTHOR:       Pedro Chinen
+#+EMAIL:        ph.u.chinen@gmail.com
+
+DATE-CREATED: [2019-05-28 ter]
+DATE-UPDATED: [2019-05-28 ter]
+
+Problem Description: [[file:dev_challenge.md]]
+
+
