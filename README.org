@@ -2,9 +2,13 @@
 #+AUTHOR:       Pedro Chinen
 #+EMAIL:        ph.u.chinen@gmail.com
 
-DATE-CREATED: [2019-05-28 ter]
-DATE-UPDATED: [2019-05-28 ter]
+#+BEGIN_SRC text
+  #+DATE-CREATED: [2019-05-28 ter]
+  #+DATE-UPDATED: [2019-05-28 ter]
+#+END_SRC
 
 Problem Description: [[file:dev_challenge.md]]
+
+
 
 
