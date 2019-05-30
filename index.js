@@ -214,11 +214,19 @@ function transforIntoPerson(keys, line){
       added = true;
     }
 
-    // Handle all the other information, where there is no need to parse or change value
+    // Handle all the other information, where there is no need to parse or change value.
     if(!added){
       person[key] = value;
     }
   }
+
+  // Improve person's classes presentation.
+  // If it has only one element, do not use an array to store it.
+  if(person['classes'].length == 1){
+    person['classes'] = person['classes'][0];
+  }
+
+
   return person;
 }
 
