@@ -327,7 +327,7 @@ async function processLineByLine() {
   });
 
   // Write people into a JSON file.
-  fs.writeFile("./my_output.json", JSON.stringify(people, null, 1), function(err) {
+  fs.writeFile("./output.json", JSON.stringify(people, null, 1), function(err) {
     if(err) {
       console.log(err);
     }
