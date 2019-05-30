@@ -44,16 +44,12 @@ function splitLine(line){
 }
 
 // ===================================================================
-// Function to get real email from a string
+// Function to check if a string is a valid email
 // Parameters: string => String containing the email address
-function getEmail(string){
+function validEmail(string){
   // Get until the end of the actual email.
-  // For example: "email@email.com :)" should be "email@email.com".
-  let indexEnd = string.indexOf(' ');
-  if(indexEnd == -1){
-    indexEnd = string.length;
-  }
-  return string.substring(0, indexEnd);
+  // For example: "email@email.com :)" should return false
+  return _.endsWith(string, '.com');
 }
 
 // ===================================================================
@@ -67,7 +63,6 @@ function transforIntoPerson(keys, line){
   for(let i=0; i<keys.length; i++){
     key = keys[i];
     value = line[i];
-
 
     // Handle Classes
     if(_.startsWith(value, 'Sala')){
@@ -138,18 +133,21 @@ function transforIntoPerson(keys, line){
               emails = _.split(emails, ',');
 
               _.forEach(emails, function(email){
-
-                let actualEmail = getEmail(email);
-
-                address['address'] = actualEmail;
-                person['addresses'].push(address);
+                let copyAddress = Object.assign({}, address);
+                if(validEmail(email)){
+                  copyAddress['address'] = email;
+                  person['addresses'].push(copyAddress);
+                }
               });
+              addAddress = false;
             }else{
 
               // There is only one element in value.
-              let actualEmail = getEmail(value);
-
-              address['address'] = actualEmail;
+              if(validEmail(value)){
+                address['address'] = value;
+              }else{
+                addAddress = false;
+              }
             }
           }else{
             addAddress = false;
@@ -160,6 +158,7 @@ function transforIntoPerson(keys, line){
           person['addresses'].push(address);
         }
       }else{
+        
         person[key] = value;
       }
     }
@@ -172,10 +171,17 @@ function transforIntoPerson(keys, line){
 // Parameters: first  => First person
 //             second => Second person
 function intersectClasses(first, second){
-  firstClasses = first['classes'];
-  secondClasses = second['classes'];
-  console.log(firstClasses);
-  console.log(secondClasses);
+  let firstClasses = first['classes'];
+  let secondClasses = second['classes'];
+  let ret = firstClasses;
+
+  _.forEach(secondClasses, function(value){
+    let index = ret.indexOf(value);
+    if(index < 0){
+      ret.push(value);
+    }
+  });
+  return ret;
 }
 
 // ===================================================================
@@ -183,10 +189,22 @@ function intersectClasses(first, second){
 // Parameters: first  => First person
 //             second => Second person
 function intersectAddresses(first, second){
-  firstAddresses = first['addresses'];
-  secondAddresses = second['addresses'];
-  console.log(firstAddresses);
-  console.log(secondAddresses);
+  let firstAddresses = first['addresses'];
+  let secondAddresses = second['addresses'];
+  let ret = firstAddresses;
+
+  _.forEach(secondAddresses, function(address){
+    let add = true;
+    _.forEach(ret, function(value){
+      if(value['address'] == address['address']){
+        add = false;
+      }
+    });
+    if(add == true){
+      ret.push(address);
+    }
+  });
+  return ret;
 }
 
 
