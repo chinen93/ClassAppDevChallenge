@@ -169,7 +169,23 @@ function handleAddresses(person, value){
   }
 
   if(addAddress){
-    person['addresses'].push(address);
+
+    // Check if address is alredy in the person's array.
+    let isAlreadyIn = false;
+    _.forEach(person['addresses'], function(alreadyIn){
+
+      // If it is merge the addresses' tags.
+      if(alreadyIn['address'] == address['address']){
+        isAlreadyIn = true;
+        _.forEach(address['tags'], function(tag){
+          alreadyIn['tags'].push(tag);
+        });
+      }
+    });
+
+    if(!isAlreadyIn){
+      person['addresses'].push(address);
+    }
   }
 }
 
