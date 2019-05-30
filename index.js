@@ -66,14 +66,16 @@ function handleClasses(person, value){
 
   // Some classes may have a dirty character in the middle.
   // For example: "Sala 1 / Sala 2" or "Sala 1 , Sala 2"
-  if(value.indexOf('/') || value.indexOf(',')){
+  if((value.indexOf('/') > 0 )|| (value.indexOf(',') > 0)){
     let values = _.split(value, '/');
     values = _.split(values, ',');
     _.forEach(values, function(val){
       person['classes'].push(_.trim(val));
     });
   }else{
-    person['classes'].push(value);
+    if(_.startsWith(value, "Sala")){
+      person['classes'].push(value);
+    }
   }
 }
 
@@ -111,7 +113,7 @@ function handleEmailAddress(person, address, value){
   // Some classes may have a dirty character in the middle.
   // Making them multiple emails in one string.
   // For example: "email1 / email2" or "email1 , email2"
-  if(value.indexOf('/') || value.indexOf(',')){
+  if((value.indexOf('/') > 0) || (value.indexOf(',') > 0)){
     let emails = _.split(value, '/');
     emails = _.split(emails, ',');
 
