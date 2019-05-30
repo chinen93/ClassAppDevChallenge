@@ -232,6 +232,14 @@ async function processLineByLine() {
     }
 
   });
-  console.log(JSON.stringify(people, null, 2));
+
+  fs.writeFile("./my_output.json", JSON.stringify(people, null, 2), function(err) {
+    if(err) {
+      console.log(err);
+    }
+
+    console.log("The file was saved!");
+  });
+  // console.log(JSON.stringify(people, null, 2));
 }
 processLineByLine();
