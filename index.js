@@ -48,7 +48,7 @@ function splitLine(line){
 // Parameters: string => String containing the email address
 function validEmail(string){
   // Get until the end of the actual email.
-  // For example: "email@email.com :)" should return false
+  // For example: "email@email.com :)" should return false.
   return _.endsWith(string, '.com');
 }
 
@@ -163,7 +163,7 @@ function handleAddresses(person, value){
     addAddress = handlePhoneAddress(address, value);
   }
 
-  // Check if an email is not empty
+  // Check if an email is not empty.
   if(_.startsWith(key, 'email')){
     addAddress = handleEmailAddress(person, address, value);
   }
@@ -188,22 +188,20 @@ function transforIntoPerson(keys, line){
     let added = false;
 
     // Handle Classes
-    if(_.startsWith(value, 'Sala')){
+    if(_.startsWith(key, 'class')){
       handleClasses(person, value);
       added = true;
-
     }
 
     // Handle Addresses
     if(_.startsWith(key, 'email') ||
-       _.startsWith(key, 'phone') &&
-      (!added)){
+       _.startsWith(key, 'phone')){
 
       handleAddresses(person, value);
       added = true;
     }
 
-    // Handle insible and see_all because they need to be a true/false value
+    // Handle insible and see_all because they need to be a true/false value.
     if(_.startsWith(key, 'invisible') ||
        _.startsWith(key, 'see_all')) {
       if(_.startsWith(value, '1') || _.startsWith(value, 'yes')){
@@ -328,7 +326,7 @@ async function processLineByLine() {
 
   });
 
-  // Write people into a JSON file
+  // Write people into a JSON file.
   fs.writeFile("./my_output.json", JSON.stringify(people, null, 1), function(err) {
     if(err) {
       console.log(err);
