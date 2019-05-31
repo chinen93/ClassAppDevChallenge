@@ -4,11 +4,24 @@
 
 #+BEGIN_SRC text
   #+DATE-CREATED: [2019-05-28 ter]
-  #+DATE-UPDATED: [2019-05-28 ter]
+  #+DATE-ENDED:   [2019-05-30 qui]
 #+END_SRC
 
 Problem Description: [[file:dev_challenge.md]]
 
+A descrição foi cumprida de forma satisfatória.
 
+Dado o arquivo /input.csv/ de entrada o arquivo /output.json/ de saída contém todas as informações da forma pedida.
 
+* Problemas Enfrentados
+:PROPERTIES:
+:ID:       1a6b819a-5c4b-4968-953c-28b2385edf4d
+:END:
 
+Apesar de ter uma descrição do que deveria ser feito, tive que fazer algumas suposições em relação a entrada e saída do programa.
+
+Alguns valores de email são inválidos como *johndoepai1@gmail.com :)*, no entanto outros como *johndoepai2@gmail.com/johndoepai3@gmail.com* são válidos. 
+
+Caso o email seja igual, é preciso juntar as /tags/ utilizadas.
+
+Essas informações tiveram que ser descobertas por tentativa e erro enquanto estava desenvolvendo a aplicação.
